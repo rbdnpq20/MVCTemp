@@ -14,18 +14,24 @@ public class JoinListController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
 		String field = req.getParameter("field");
 		String query = req.getParameter("query");
+		String page_ = req.getParameter("p");
 		
-		JoinService ss = new JoinService();
+		int page = 1 ;
 
+		JoinService ss = new JoinService();
+		
 		if (query == null || field == null) {
 			field = "l.LOCNAME";
 			query = "";
 		}
 		
-		List<Join> list = ss.JoinList(field, query);
+		if (page_ != null) {
+			page = Integer.parseInt(req.getParameter("p"));
+		}
+		
+		List<Join> list = ss.JoinList(field, query, page);
 		
 		req.setAttribute("list", list);
 		req.getRequestDispatcher("JoinList.jsp").forward(req, resp);

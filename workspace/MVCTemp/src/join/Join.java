@@ -1,22 +1,31 @@
 package join;
 
+import java.util.Date;
+
 public class Join {
 	String location;
-	String date;	
+	Date date;	
 	String name;
 	String enemy;
 	String content;
+	int seq;
 	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 	public String getLocation() {
 		return location;
 	}
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	public String getName() {

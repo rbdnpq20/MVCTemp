@@ -7,8 +7,14 @@ public class Score {
 	String hiter;
 	String content;
 	String memo;
+	int seq;
 	
-	
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 	public String getLocid() {
 		return locid;
 	}
