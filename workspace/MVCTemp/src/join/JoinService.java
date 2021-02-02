@@ -17,8 +17,8 @@ public class JoinService {
 	
 	public List<Join> JoinList(String field, String query, int page) {
 		
-		int start = 1 + (page - 1) * 2 ;
-		int end = page * 2 ;
+		int start = 1 + (page - 1) * 4 ;
+		int end = page * 4 ;
 		
 		List<Join> list = new ArrayList();
 		String sql = "select l.LOCNAME as LOCATION, s.REGDATE as DATE, u.NAME, s.ENEMY, s.CONTENT, s.seq "
@@ -92,6 +92,25 @@ public class JoinService {
 			e.printStackTrace();
 		}
 		return sc;
+	}
+	
+	public int JoinCount() {
+		String sql = "Select count(seq) as count from score";
+		int count = 0;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			PreparedStatement psmt = con.prepareStatement(sql);
+			ResultSet rs = psmt.executeQuery();
+
+			rs.next();
+			count = rs.getInt("count");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 }

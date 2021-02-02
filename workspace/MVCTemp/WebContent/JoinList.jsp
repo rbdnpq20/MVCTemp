@@ -36,31 +36,33 @@
 		</c:forEach>
 	</table>
 	
-	<form action="joinlist">
+	<form>
 	<table>
 		<tr>
 			<td>
 				<select name="field" >
-    				<option value="l.LOCNAME">지역</option>
-    				<option value="date">날짜</option>
-    				<option value="name">이름</option>
-    				<option value="enemy">적</option>
-    				<option value="content">내용</option>
+    				<option ${(param.field == "l.LOCNAME")?"selected":""} value="l.LOCNAME">지역</option>
+    				<option ${(param.field == "date")?"selected":""} value="date">날짜</option>
+    				<option ${(param.field == "name")?"selected":""} value="name">이름</option>
+    				<option ${(param.field == "enemy")?"selected":""} value="enemy">적</option>
+    				<option ${(param.field == "content")?"selected":""} value="content">내용</option>
   			</select>
-  			<input type ="text" name="query">
+  			<input type ="text" name="query" value="${param.query}">
   			<input type ="submit" value="검색">
+  			 현재 페이지 :: <span>${empty param?1:param.p}</span>/ ${fn:substringBefore(Math.ceil(count/4), '.')}
 			</td>
 		</tr>	
 	</table>
 </form>
 
-   <!-- 페이지 이동 -->
-   
    <!-- startnum 변수 선언 및 값 할당 -->
    <c:set var="page" value="${empty param?1:param.p}"></c:set>
    <c:set var="startNum" value="${page-(page-1)%10}"></c:set>
-   <c:set var="lastNum" value="49"></c:set>
- 
+   <c:set var="lastNum" value="${fn:substringBefore(Math.ceil(count/4), '.')}"></c:set>
+
+   <!-- 페이지 이동 -->
+
+   
    <!-- Prev 버튼 -->
    <c:if test="${startNum > 1}">
       <a href="?p=${startNum-1}&t=&q=">이전</a>
@@ -71,7 +73,15 @@
 
    <!-- 페이징 -->
       <c:forEach var="i" begin="0" end="9">
-       <a href="joinlist?p=${startNum+i}">${startNum+i}</a>
+                <c:if test="${param.p == (startNum+i)}">
+         	   <c:set var="style" value="font-weight:bold;color:red;"></c:set>
+         	</c:if>
+         	<c:if test="${param.p != (startNum+i)}">
+         		<c:set var="style" value=""></c:set>
+         	</c:if>
+         	<c:if test="${(startNum+i) <= lastNum}">
+       <a style ="${style}" href="joinlist?p=${startNum+i}&field=${param.field}&query=${param.query}">${startNum+i}</a>
+       </c:if>
       </c:forEach>
    
    <!-- Next 버튼 -->

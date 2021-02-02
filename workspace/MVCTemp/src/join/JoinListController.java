@@ -31,8 +31,11 @@ public class JoinListController extends HttpServlet{
 			page = Integer.parseInt(req.getParameter("p"));
 		}
 		
+		int count = ss.JoinCount();
+		
 		List<Join> list = ss.JoinList(field, query, page);
 		
+		req.setAttribute("count", count);
 		req.setAttribute("list", list);
 		req.getRequestDispatcher("JoinList.jsp").forward(req, resp);
 	}
