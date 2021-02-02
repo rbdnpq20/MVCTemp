@@ -176,7 +176,7 @@ public class NoticeService {
 		return list;
 	}
 	
-	public Notice count() {
+	public Notice 쓸모없는기능() {
 
 		Notice list = new Notice();
 		String url = "jdbc:mysql://localhost:3306/jdbc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -229,5 +229,49 @@ public class NoticeService {
 			e.printStackTrace();
 		}
 		return nt;
+	}
+	
+	public int getNoticeCount() {
+		return getNoticeCount("title", "");
+	}
+
+	public int getNoticeCount(String field, String query) {
+		int count = 0;
+		String sql = "Select count(num.id) as count" 
+				 + "  from (Select @rownum:=@rownum+1 as num , n.*" 
+				 + "        from(select *"
+				 + "               From notice"
+				 + "			  where "+field+" like ?"  // %검색어% 
+				 + "		      order by regdate desc)n"
+				 + "        Where (@rownum:=0)=0) num " ;
+		
+		System.out.println(sql);
+		List<Notice> list = new ArrayList<Notice>();
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			PreparedStatement psmt = con.prepareStatement(sql);
+			// Statement st = con.createStatement();
+			psmt.setString(1, "%"+query+"%");
+			ResultSet rs = psmt.executeQuery();
+
+			if (rs.next()) {
+				count = rs.getInt("count");
+				int id = rs.getInt("id");
+				String title = rs.getString("title");
+				String writerid = rs.getString("writer_id");
+				Date regDate = rs.getDate("regdate");
+				String content = rs.getString("content");
+				int hit = rs.getInt("hit");
+				String files = rs.getString("files");
+
+				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
+				list.add(nt);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }
