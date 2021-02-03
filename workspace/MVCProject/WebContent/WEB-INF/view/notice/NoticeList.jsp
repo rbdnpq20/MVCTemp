@@ -60,7 +60,7 @@
    <!-- 페이지 이동 -->
    		<div>
    			<h3> 현재 페이지 </h3>
-   			<div><span>﻿${empty param?1:param.p}﻿ </span>/ ${fn:substringBefore(Math.ceil(count/10), '.')} pages</div>
+   			<div><span>﻿${empty param.p?1:param.p}﻿ </span>/ ${fn:substringBefore(Math.ceil(count/10), '.')} pages</div>
    		</div>
    
    <!-- Prev 버튼 -->
@@ -83,8 +83,6 @@
          	<c:if test="${(startNum+i) <= lastNum}">
          	  <li><a style ="${style}" href="list?p=${startNum+i}&field=${param.field}&query=${param.query}">${startNum+i}</a></li>
          	</c:if>
-         	
-  
       </c:forEach>
    </ul>
    
@@ -95,7 +93,5 @@
       <c:if test="${startNum+5 > lastNum}">
       <a href="#" onclick="alert('마지막 페이지 입니다.');">Next</a>
    </c:if>
-   
-   
 </body>
 </html>
