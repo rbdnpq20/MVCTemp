@@ -22,8 +22,8 @@ public class JoinListController extends HttpServlet{
 
 		JoinService ss = new JoinService();
 		
-		if (query == null || field == null) {
-			field = "l.LOCNAME";
+		if (query == null || field == null || field.equals("")) {
+			field = "locname";
 			query = "";
 		}
 		
@@ -31,8 +31,7 @@ public class JoinListController extends HttpServlet{
 			page = Integer.parseInt(req.getParameter("p"));
 		}
 		
-		int count = ss.JoinCount();
-		
+		int count = ss.JoinCount(field, query);
 		List<Join> list = ss.JoinList(field, query, page);
 		
 		req.setAttribute("count", count);
