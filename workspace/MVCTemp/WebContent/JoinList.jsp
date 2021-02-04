@@ -11,10 +11,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+	function checkYN() {
+		let fm = document.check;
+		fm.action ="joinlist";
+		fm.method = "post"
+		let yn = confirm("한번 지우면 다시 돌이킬 수 없습니다.");
+		console.log(yn);
+			if(yn==true){
+				fm.submit();
+				alert('당신은 삭제 되었습니다.');
+			} else {
+				alert('당신은 생존 했습니다.');
+			 }
+			}
+</script>
 	</head>
+	
+
 	<body>
-	
-	
+	 <form name="check">	
 	<table border=1>
 	<tr>
 		<td>힛터번호</td>	
@@ -23,7 +39,9 @@
 		<td>이름</td>
 		<td>적</td>
 		<td>내용</td>
+		<td><input type ="button" onclick="checkYN()" value ="삭제" /></td>
 	</tr>
+
 		<c:forEach var="n" items ="${list}">
 		<tr>
 			<td>${n.seq}</td>
@@ -32,10 +50,12 @@
 			<td>${n.name}</td>
 			<td>${n.enemy}</td>	
 			<td><a href="joindetail?seq=${n.seq}">${n.content}</a></td>
+			<td><center><input type="checkbox" name="c" value="${n.seq}"></center></td>
+			
 		</tr>
 		</c:forEach>
 	</table>
-
+</form>
 	<form>
 	<table>
 		<tr>
@@ -50,12 +70,13 @@
   			<input type ="text" name="query" value="${param.query}">
   			<input type ="submit" value="검색">
   			 현재 페이지 :: <span>${(empty param.p)?1:param.p}</span>/ ${fn:substringBefore(Math.ceil(count/4), '.')}
+  			 
 			</td>
 		</tr>	
 	</table>
 </form>
 
-	   <!-- startnum 변수 선언 및 값 할당 -->
+   <!-- startnum 변수 선언 및 값 할당 -->
    <c:set var="page" value="${(empty param)?1:param.p}"></c:set>
    <c:set var="startNum" value="${page-(page-1)%10}"></c:set>
    <c:set var="lastNum" value="${fn:substringBefore(Math.ceil(count/4), '.')}"></c:set>
@@ -91,6 +112,8 @@
       <a href="#" onclick="alert('마지막 페이지 입니다.');">다음</a>
    </c:if>
 
+	<!-- 글쓰기 -->
+	<input type ="button" value ="글쓰기">
 
 	</body>
 </html>

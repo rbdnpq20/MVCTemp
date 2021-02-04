@@ -11,6 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/joinlist")
 public class JoinListController extends HttpServlet{
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String ids_[] = req.getParameterValues("c");
+		int ids[] = new int[ids_.length];
+		
+		for (int i = 0; i<ids_.length; i++) {
+			ids[i] = Integer.parseInt(ids_[i]);
+		}
+		for (String i : ids_) {
+			System.out.println("선택된 값 : "+ i);	
+		}
+		
+		JoinService js = new JoinService();
+		js.removeJoinAll(ids);
+		
+		resp.sendRedirect("joinlist");
+		
+	}
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

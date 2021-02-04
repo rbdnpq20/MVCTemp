@@ -29,9 +29,10 @@ public class JoinService {
 				+	"from score)s, " 
 				+	"(select id, locname " 
 				+	"from location)l " 
-				+	"where l.id = s.locid and u.id = s.hiter and "+field+" like ? )n "
+				+	"where l.id = s.locid and u.id = s.hiter and "+field+" like ? order by s.seq desc)n "
 				+	"Where (@rownum:=0)=0) num "
-			    +   "where num.num between ? and ?" ;
+			    +   "where num.num between ? and ? " ;
+
 		
 //		String sql = "select * from "
 //		 + "(select s.seq, l.locname, u.name, s.regdate, s.enemy, s.content from "
@@ -157,5 +158,25 @@ public class JoinService {
 		}
 		return count;
 	}
+	
+	public int removeJoinAll(int [] ids) { // list에서 체크해서 삭제
+		String sql = "delete from score where seq=?";
+		int result = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
 
+			for (int i=0 ; i <ids.length; i++) {
+				int id = ids[i];
+				PreparedStatement psmt = con.prepareStatement(sql);
+				psmt.setInt(1, id);
+				psmt.executeUpdate();
+				result++;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result; 
+	}
 }
