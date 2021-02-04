@@ -10,6 +10,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
+	function checkYN() {
+		let fm = document.check;
+		fm.action ="list";
+		fm.method = "post"
+		let yn = confirm("한번 지우면 다시 돌이킬 수 없습니다.");
+		console.log(yn);
+			if(yn==true){
+				fm.submit();
+				alert('당신은 삭제 되었습니다.');
+			} else {
+				alert('당신은 생존 했습니다.');
+			 }
+			}
+</script>
+
 </head>
 <body>
    <form>
@@ -31,6 +47,7 @@
    </table>
    </form>
 
+ <form name="check">
    <table border=1>
       <tr>
          <td>번호</td>
@@ -46,9 +63,14 @@
             <td>${n.writerID}</td>
             <td><fmt:formatDate value="${n.regdate}" pattern="yyyy.MM.dd."></fmt:formatDate></td>
             <td><fmt:formatNumber value="${n.hit}" type="number"></fmt:formatNumber></td>
+            <td><input type="checkbox" name="c" value="${n.id}"></td>
          </tr>
       </c:forEach>
    </table>
+   
+   <!--  삭제 -->
+   	 <input type ="button" onclick="checkYN()" value ="삭제" />
+   </form>
    
    <!-- startnum 변수 선언 및 값 할당 -->
    <c:set var="page" value="${empty param?1:param.p}"></c:set>

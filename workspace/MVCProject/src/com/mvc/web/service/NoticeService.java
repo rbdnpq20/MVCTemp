@@ -69,140 +69,6 @@ public class NoticeService {
 		return list;
 	}
 	
-	public List<Notice> getList1(int page) { // 글 조회
-		int start = 1 + (page - 1) * 10; // 1, 11, 21, 31
-		int end = page * 10; // 10, 20, 30, 40
-
-		String sql = "Select *" 
-				+ "from (Select @rownum:=@rownum+1 as num , n.*" 
-				+ "        from(select *"
-				+ "               From notice" 
-				+ "		      order by regdate desc)n"
-				+ "        Where (@rownum:=0)=0) num " 
-				+ " Where num.num between ? and ? ";
-
-		List<Notice> list = new ArrayList<Notice>();
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, root, pw);
-			PreparedStatement psmt = con.prepareStatement(sql);
-			// Statement st = con.createStatement();
-			psmt.setInt(1, start);
-			psmt.setInt(2, end);
-			ResultSet rs = psmt.executeQuery();
-
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				String title = rs.getString("title");
-				String writerid = rs.getString("writer_id");
-				Date regDate = rs.getDate("regdate");
-				String content = rs.getString("content");
-				int hit = rs.getInt("hit");
-				String files = rs.getString("files");
-
-				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
-				list.add(nt);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Notice> getNoticeList11() {
-		List<Notice> list = new ArrayList();
-		String url = "jdbc:mysql://localhost:3306/jdbc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		String root = "root";
-		String pw = "dkssud";
-
-		String sql = "select * from notice";
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, root, pw);
-			PreparedStatement psmt = con.prepareStatement(sql);
-			ResultSet rs = psmt.executeQuery();
-
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				String title = rs.getString("title");
-				String writerid = rs.getString("writer_id");
-				Date regDate = rs.getDate("regdate");
-				String content = rs.getString("content");
-				int hit = rs.getInt("hit");
-				String files = rs.getString("files");
-
-				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
-				list.add(nt);
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	public Notice getNoticeView() {
-
-		Notice list = new Notice();
-		String url = "jdbc:mysql://localhost:3306/jdbc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		String root = "root";
-		String pw = "dkssud";
-
-		String sql = "select * from notice";
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, root, pw);
-			PreparedStatement psmt = con.prepareStatement(sql);
-			ResultSet rs = psmt.executeQuery();
-
-			rs.next();
-			int id = rs.getInt("id");
-			String title = rs.getString("title");
-			String writerid = rs.getString("writer_id");
-			Date regDate = rs.getDate("regdate");
-			String content = rs.getString("content");
-			int hit = rs.getInt("hit");
-			String files = rs.getString("files");
-
-			Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
-			list = nt;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	public Notice 쓸모없는기능() {
-
-		Notice list = new Notice();
-		String url = "jdbc:mysql://localhost:3306/jdbc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		String root = "root";
-		String pw = "dkssud";
-
-		String sql = "select count(id) from notice";
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, root, pw);
-			PreparedStatement psmt = con.prepareStatement(sql);
-			ResultSet rs = psmt.executeQuery();
-
-			rs.next();
-			int count = rs.getInt("count(id)");
-			Notice nt = new Notice();
-			nt.setHit(count);
-			list = nt;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
 	public Notice getNoticeDetail(int id) {
 		String sql = "Select * from notice where id=? ";
 		Notice nt = null;
@@ -252,26 +118,65 @@ public class NoticeService {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, root, pw);
 			PreparedStatement psmt = con.prepareStatement(sql);
-			// Statement st = con.createStatement();
 			psmt.setString(1, "%"+query+"%");
 			ResultSet rs = psmt.executeQuery();
 
 			if (rs.next()) {
 				count = rs.getInt("count");
-				int id = rs.getInt("id");
-				String title = rs.getString("title");
-				String writerid = rs.getString("writer_id");
-				Date regDate = rs.getDate("regdate");
-				String content = rs.getString("content");
-				int hit = rs.getInt("hit");
-				String files = rs.getString("files");
-
-				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
-				list.add(nt);
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return count;
+	}
+	
+	public int removeNoticeAll(int [] ids) { // list에서 체크해서 삭제
+		String sql = "delete from notice where id=?";
+		int result = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+
+			for (int i=0 ; i <ids.length; i++) {
+				int id = ids[i];
+				PreparedStatement psmt = con.prepareStatement(sql);
+				psmt.setInt(1, id);
+				psmt.executeUpdate();
+				result++;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result; 
+	}
+	
+	public int insertNotice(Notice nt) { // 글쓰기
+		return 0;
+	}
+	
+	public int updateNotice(Notice nt) { // 글 수정
+		return 0;
+	}
+	
+	public int deleteNotice(int id) {
+		String SQL = "Delete from notice where id= ? " ;
+		int rs = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			PreparedStatement psmt = con.prepareStatement(SQL);
+			psmt.setInt(1, id);
+			rs = psmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rs; 
+	}
+	
+	public List<Notice> getNoticeNewList(Notice nt){
+		return null;
 	}
 }

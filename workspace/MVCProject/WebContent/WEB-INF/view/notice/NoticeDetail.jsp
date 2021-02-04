@@ -46,5 +46,15 @@
          	<td colspan="4">${nt.content}</td>
         </tr>
    </table>
+   
+   
+   <!-- 목록 버튼 -->
+   필드 : ${param.field}<br>
+   쿼리 : ${param.query}<br>
+   쿼리 : ${param.p}<br>
+   <input type ="button" onclick="location.href='list?p=${param.p}&field=${param.field}&query=${param.query}'" value="목록">
+   <input type ="button" onclick="location.href='delete?id=${param.id}'" value="삭제를 해봅시다아아앙아">
+   
+   
 </body>
 </html>
