@@ -13,25 +13,44 @@ import javax.servlet.http.HttpServletResponse;
 public class JoinListController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String ids_[] = req.getParameterValues("c");
-		int ids[] = new int[ids_.length];
 		
-		for (int i = 0; i<ids_.length; i++) {
-			ids[i] = Integer.parseInt(ids_[i]);
-		}
-		for (String i : ids_) {
-			System.out.println("선택된 값 : "+ i);	
-		}
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
 		
-		JoinService js = new JoinService();
-		js.removeJoinAll(ids);
+		String openid[] = req.getParameterValues("open");
+		String deleteid[] = req.getParameterValues("delete");		
+		String cmd = req.getParameter("cmd");
 		
-		resp.sendRedirect("joinlist");
+		switch(cmd) {
+		case "보기":
+			for (String s : openid) {
+				System.out.println("open : "+s);
+			}
+			break;
+			
+		case "삭제" :
+			for (String s : deleteid) {
+				System.out.println("del : "+s);
+			}
+			
+			int ids[] = new int[deleteid.length];
+			
+			for (int i=0 ; i<ids.length ; i++) {
+				ids[i] = Integer.parseInt(deleteid[i]);
+			}
+			JoinService js = new JoinService();
+			int result = js.deleteJoinAll(ids);
+			break;
+			}
+	
+			resp.sendRedirect("joinlist");
 		
 	}
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		
 		String field = req.getParameter("field");
 		String query = req.getParameter("query");
 		String page_ = req.getParameter("p");

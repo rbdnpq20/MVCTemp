@@ -30,7 +30,7 @@
 	
 
 	<body>
-	 <form name="check">	
+<form method ="post">	
 	<table border=1>
 	<tr>
 		<td>힛터번호</td>	
@@ -39,7 +39,8 @@
 		<td>이름</td>
 		<td>적</td>
 		<td>내용</td>
-		<td><input type ="button" onclick="checkYN()" value ="삭제" /></td>
+		<td><input type ="submit" name="cmd" value ="삭제" /></td>
+		<td><input type ="submit" name="cmd" value ="조회" /></td>
 	</tr>
 
 		<c:forEach var="n" items ="${list}">
@@ -50,7 +51,8 @@
 			<td>${n.name}</td>
 			<td>${n.enemy}</td>	
 			<td><a href="joindetail?seq=${n.seq}">${n.content}</a></td>
-			<td><center><input type="checkbox" name="c" value="${n.seq}"></center></td>
+			<td><center><input type="checkbox" name="delete" value="${n.seq}"></center></td>
+			<td><center><input type="checkbox" name="open" value="${n.seq}"></center></td>
 			
 		</tr>
 		</c:forEach>
@@ -82,6 +84,7 @@
    <c:set var="lastNum" value="${fn:substringBefore(Math.ceil(count/4), '.')}"></c:set>
   
    <!-- 페이지 이동 -->
+
    
    <!-- Prev 버튼 -->
    <c:if test="${startNum > 1}">
@@ -113,7 +116,7 @@
    </c:if>
 
 	<!-- 글쓰기 -->
-	<input type ="button" value ="글쓰기">
+   <input type ="button" onclick="location.href='Scoreinsert.jsp'" value ="글쓰기" />
 
 	</body>
 </html>

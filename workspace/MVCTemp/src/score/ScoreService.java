@@ -48,4 +48,27 @@ public class ScoreService {
 		return list;
 	}
 
+	public int insertScore(Score sc) {
+		int result = 0;
+		String sql = "insert into score(locid, enemy, hiter, content, memo)"
+				+ " values(?, ?, ?, ?, ?)";
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			PreparedStatement psmt = con.prepareStatement(sql);
+			psmt.setString(1, sc.getLocid());
+			psmt.setString(2, sc.getEnemy());
+			psmt.setString(3, sc.getHiter());
+			psmt.setString(4, sc.getContent());
+			psmt.setString(5, sc.getMemo());
+			
+			result = psmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return result;
+	}
+
 }

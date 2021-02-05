@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -179,4 +180,29 @@ public class JoinService {
 		}
 		return result; 
 	}
+	
+	public int deleteJoinAll(int[] ids) {
+		int result = 0;
+		String params = "";
+		
+		for (int i = 0; i < ids.length; i++) {
+			params += ids[i];
+			if (i < ids.length - 1) {
+				params += ",";
+			}
+		}
+		String sql = "delete from score where seq in("+params+")";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			Statement st = con.createStatement();
+			result = st.executeUpdate(sql);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result; 
+	}
+	
 }
