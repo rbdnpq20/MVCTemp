@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,7 @@ public class NoticeService {
 				 + "        from(select *"
 				 + "               From notice"
 				 + "			  where "+field+" like ?"  // %검색어% 
-				 + "		      order by regdate desc)n"
+				 + "		      order by id desc)n"
 				 + "        Where (@rownum:=0)=0) num " 
 				 + "Where num.num between ? and ? ";
 		
@@ -59,8 +60,14 @@ public class NoticeService {
 				String content = rs.getString("content");
 				int hit = rs.getInt("hit");
 				String files = rs.getString("files");
+				String pubflag = rs.getString("pubflag");
+				boolean pub = false;
+				
+				if (pubflag.equals("Y")) {
+					pub = true;
+				}
 
-				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files);
+				Notice nt = new Notice(id, title, writerid, content, regDate, hit, files, pub);
 				list.add(nt);
 			}
 		} catch (Exception e) {
@@ -88,8 +95,14 @@ public class NoticeService {
 				String content = rs.getString("content");
 				int hit = rs.getInt("hit");
 				String files = rs.getString("files");
+				String pubflag = rs.getString("pubflag");
+				boolean pub = false;
+				
+				if (pubflag.equals("Y")) {
+					pub = true;
+				}
 
-				nt = new Notice(id, title, writerid, content, regDate, hit, files);
+				nt = new Notice(id, title, writerid, content, regDate, hit, files, pub);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,7 +166,28 @@ public class NoticeService {
 	}
 	
 	public int insertNotice(Notice nt) { // 글쓰기
-		return 0;
+		 int rs = 0;
+		 String sql = "insert into notice(title, writer_id, content, files, pubflag) "
+		             + " values(?, ?, ?, ?, ?)" ;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection con = DriverManager.getConnection(url, root, pw);
+				PreparedStatement psmt = con.prepareStatement(sql);
+				psmt.setString(1, nt.getTitle());
+				psmt.setString(2, nt.getWriterID());
+				psmt.setString(3, nt.getContent());
+				psmt.setString(4, nt.getFiles());
+				String pub = "N";
+				if(nt.getPub()==true) {
+					pub = "Y";
+				}
+				psmt.setString(5, pub);
+				rs = psmt.executeUpdate();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return rs;
 	}
 	
 	public int updateNotice(Notice nt) { // 글 수정
@@ -178,5 +212,30 @@ public class NoticeService {
 	
 	public List<Notice> getNoticeNewList(Notice nt){
 		return null;
+	}
+
+	public int deleteNoticeAll(int[] ids) {
+		int result = 0;
+		String params = "";
+		
+		for (int i = 0; i < ids.length; i++) {
+			params += ids[i];
+			if (i < ids.length - 1) {
+				params += ",";
+			}
+		}
+		
+		String sql = "delete from notice where id in("+params+")";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, root, pw);
+			Statement st = con.createStatement();
+			result = st.executeUpdate(sql);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result; 
 	}
 }

@@ -10,14 +10,14 @@ public class Notice {
 	Date regdate;
 	int hit;
 	String files;
+	boolean pub;
 	
 	// 생성자
-	public Notice() {
-		
+	public Notice() {	
 	}
 	
 	// 생성자 오버라이드
-	public Notice(int id, String title, String writerID, String content, Date regdate, int hit, String files) {
+	public Notice(int id, String title, String writerID, String content, Date regdate, int hit, String files, boolean pub) {
 		this.id = id;
 		this.title = title;
 		this.writerID = writerID;
@@ -25,14 +25,13 @@ public class Notice {
 		this.regdate = regdate;
 		this.hit = hit;
 		this.files = files;
+		this.pub = pub;
 	}
 	
 	// get, set
 	public int getId() {
 		return id;
 	}
-
-
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -72,7 +71,12 @@ public class Notice {
 	public void setFiles(String files) {
 		this.files = files;
 	}
-	
+	public boolean getPub() {
+		return pub;
+	}
+	public void setPub(boolean pub) {
+		this.pub = pub;
+	}
 	
 
 }

@@ -1,4 +1,4 @@
-package com.mvc.web.controller.admin;
+package com.mvc.web.controller.notice;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,11 +19,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.jdbc.app.entity.Notice;
 import com.mvc.web.service.NoticeService;
 
-@WebServlet("/admin/board/notice/index") //4
-public class indexController extends HttpServlet{
+@WebServlet("/notice/detail")
+public class DetailController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		req.getRequestDispatcher("/WEB-INF/view/admin/board/notice/index.jsp").forward(req, resp); //3
+		int id = Integer.parseInt(req.getParameter("id"));
+		
+		NoticeService ns = new NoticeService();
+		Notice nt = ns.getNoticeDetail(id);
+		
+		req.setAttribute("nt", nt);
+		req.getRequestDispatcher("/WEB-INF/view/notice/detail.jsp").forward(req, resp);
 		}
 	}
